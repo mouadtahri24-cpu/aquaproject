@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Gemini\Laravel\Facades\Gemini;
+use Illuminate\Support\Facades\Artisan;
 
 Route::get('/', function () {
     return view('welcome');
@@ -14,4 +15,10 @@ Route::get('/test-gemini', function () {
 
     // On retourne le texte de la réponse
     return $result->text();
+});
+
+
+Route::get('/creer-tables', function () {
+    Artisan::call('migrate', ['--force' => true]);
+    return "C'est une victoire : les tables de la base de données ont été créées !";
 });
