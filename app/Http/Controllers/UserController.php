@@ -67,4 +67,41 @@ class UserController extends Controller {
             'count' => $users->count(),
         ]);
     }
+
+    /**
+     * Récupère tous les comptes en attente de validation
+     * GET /api/v1/users/pending
+     */
+    public function getPending() {
+        $users = User::where('is_active', false)->get();
+        return response()->json([
+            'data' => UserResource::collection($users),
+            'count' => $users->count(),
+        ]);
+    }
+
+    /**
+     * Valide (approuve) un compte utilisateur
+     * POST /api/v1/users/{user}/approve
+     */
+    public function approve(User $user) {
+        $user->update(['is_active' => true]);
+
+        return response()->json([
+            'message' => 'Compte validé avec succès',
+            'data' => new UserResource($user),
+        ]);
+    }
+
+    /**
+     * Rejette (désactive) un compte utilisateur
+     * POST /api/v1/users/{user}/reject
+     */
+    public function reject(User $user) {
+        $user->delete();
+
+        return response()->json([
+            'message' => 'Compte rejeté et supprimé',
+        ]);
+    }
 }

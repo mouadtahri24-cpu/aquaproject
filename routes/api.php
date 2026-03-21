@@ -20,6 +20,7 @@ Route::prefix('v1')->group(function () {
     
     // ===================== AUTH (Publique) =====================
     Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/register', [AuthController::class, 'register']); // Inscription publique
 
     // ===================== ROUTES PROTÉGÉES =====================
     Route::middleware('auth:sanctum')->group(function () {
@@ -32,6 +33,9 @@ Route::prefix('v1')->group(function () {
         Route::middleware('role:admin')->group(function () {
             Route::apiResource('users', UserController::class);
             Route::get('/users/role/{role}', [UserController::class, 'getByRole']);
+            Route::get('/users/pending', [UserController::class, 'getPending']); // Voir comptes en attente
+            Route::post('/users/{user}/approve', [UserController::class, 'approve']); // Valider un compte
+            Route::post('/users/{user}/reject', [UserController::class, 'reject']); // Rejeter un compte
         });
 
         // ===== SWIMMERS =====
